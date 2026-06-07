@@ -1,42 +1,35 @@
 ---
-name: beautiful-feishu-whiteboard
-version: 1.1.0
+name: beautiful-whiteboard
+version: 1.2.0
 description: >
-  A library of 35 curated colour palette styles for building beautiful, editable Feishu / Lark
-  (飞书) whiteboards from SVG. Use this whenever the user wants to create or draw a Feishu whiteboard,
-  infographic, diagram, poster, or visual explainer and wants it to look polished, on brand, or in a
+  A library of 35 curated colour palette styles for building beautiful SVG diagrams
+  and exporting them as images. Use this whenever the user wants to create an infographic,
+  diagram, poster, or visual explainer and wants it to look polished, on brand, or in a
   particular aesthetic, or when they name a style. The agent figures out what board the user wants,
-  asks about the visual vibe, picks a fitting style from the catalogue, generates an editable Feishu
-  whiteboard, returns the doc link and the rendered image, and offers to switch styles. Requires
-  lark-cli (npm @larksuite/cli) installed and authenticated, and a Feishu/Lark account.
+  asks about the visual vibe, picks a fitting style from the catalogue, generates an SVG,
+  and returns the rendered image. Offers to switch styles.
 ---
 
-# Beautiful Feishu Whiteboard
+# Beautiful Whiteboard
 
-A design system skill: **35 colour palette styles** plus the verified **hard rules** of the Feishu
-SVG whiteboard medium, so you can build gorgeous, on brand, *editable* whiteboards.
+A design system skill: **35 colour palette styles** plus the verified **hard rules** of SVG
+diagram rendering, so you can build gorgeous, on brand diagrams.
 
 This is **not** an auto layout chart generator. **You** compose the layout. A template gives you a
-**palette and mood**; [`RULES.md`](RULES.md) gives you the medium's hard limits. The board you
-produce is a real, editable Feishu whiteboard inside a doc, not a screenshot.
+**palette and mood**; [`RULES.md`](RULES.md) gives you the medium's hard limits. The diagram you
+produce is a clean SVG that can be exported as PNG.
 
 ## When to use
-- The user wants a Feishu / Lark whiteboard, infographic, diagram, poster, or visual explainer that
-  should look good, branded, or in a specific aesthetic.
+- The user wants an infographic, diagram, poster, or visual explainer that should look good,
+  branded, or in a specific aesthetic.
 - The user names a style, or points at one of the templates.
-- The user gives content ("explain X as a whiteboard", "turn this into a board") and wants it
-  visual and editable inside Feishu.
+- The user gives content ("explain X as a diagram", "turn this into a visual") and wants it
+  rendered as an image.
 
 ## Step 0: prerequisites (check before doing anything)
 Run [`scripts/preflight.sh`](scripts/preflight.sh), or check manually:
 - **Node 20 or newer.**
-- **`lark-cli`** (npm package **`@larksuite/cli`**), installed **and authenticated**. If missing:
-  `npm install -g @larksuite/cli`, then `lark-cli config init` (scan the QR), then `lark-cli auth login`.
 - **`@larksuite/whiteboard-cli`**, used via `npx`, auto downloads, no install needed.
-- A **Feishu / Lark account**. The board is written to the user's own tenant.
-
-If `lark-cli` is missing or not authenticated, tell the user exactly how to install and
-authenticate, then stop. You cannot write a board without it.
 
 ## How to run the conversation
 
@@ -59,14 +52,11 @@ authenticate, then stop. You cannot write a board without it.
    - **Render it, then look at the image and correct yourself**: fix text overflow, tight margins or
      padding, numerals touching edges, accidental overlaps, and clipping. Iterate render, view, fix
      until it is clean. (Commands and the full checklist are in `RULES.md`.)
-   - Write it into a Feishu doc as an editable whiteboard, then view the live board image too and fix
-     any remaining layout issues.
-5. **Deliver.** Give the user **both**: the **Feishu doc link** and the **rendered image** itself, so
-   they can see it without opening the doc. Then tell them they can **switch to a different style**
-   any time, and you will re render the same content in the new palette.
+5. **Deliver.** Give the user the **rendered image**. Then tell them they can **switch to a different
+   style** any time, and you will re render the same content in the new palette.
 
 ## Files
-- **[`RULES.md`](RULES.md)**: the hard rules and the exact build, write, and verify commands. Always read this.
+- **[`RULES.md`](RULES.md)**: the hard rules and the exact build and verify commands. Always read this.
 - **[`CATALOG.md`](CATALOG.md)**: every style with its vibe, formality, and what it is good for. Use it to choose.
 - **[`templates/<slug>/design.md`](templates/)**: one per style, the colour palette and how to use it.
-- **[`scripts/preflight.sh`](scripts/preflight.sh)**: dependency and auth check.
+- **[`scripts/preflight.sh`](scripts/preflight.sh)**: dependency check.

@@ -1,12 +1,11 @@
-# Feishu SVG Whiteboard — Medium Rules
+# SVG Diagram — Medium Rules
 
-These apply to **every** board, regardless of template. A template gives you a **color palette
-and a mood**; this file is the **hard limits of the medium**. All of it is verified empirically on
-the real board (the image export and the GUI behave differently — see notes below).
+These apply to **every** diagram, regardless of template. A template gives you a **color palette
+and a mood**; this file is the **hard limits of the medium**.
 
 ## Hard rules
 
-- **One font.** The board hardcodes a single font (Noto Sans SC). Never set `font-family`. Type is
+- **One font.** The diagram hardcodes a single font (Noto Sans SC). Never set `font-family`. Type is
   size / weight / casing / letter-spacing only — there is no typeface choice.
 - **Text lives in `<text>` / `<tspan>`** — never outline glyphs as `<path>`.
 - **Shape vocabulary is native-only — a rectangles-and-circles tool.** Build everything from
@@ -18,10 +17,10 @@ the real board (the image export and the GUI behave differently — see notes be
   silhouettes). If a reference is organic, keep only its **palette** and rebuild with rects + circles.
 - **Arrows = native connectors, never hand-drawn heads.** To put an arrowhead on a line, give the
   `<line>` or `<polyline>` a **`marker-end`** (and `marker-start` for a double-headed arrow)
-  pointing at a `<marker>` in `<defs>`. The board converts these into **native connectors with a
+  pointing at a `<marker>` in `<defs>`. The renderer converts these into **native connectors with a
   clean built-in arrowhead**, and the arrow takes the line's `stroke` colour. **Never draw an
   arrowhead as a separate `<polygon>` / triangle** — a polygon embeds as a flat image and renders
-  rough, squiggly, and hand-drawn (unprofessional). One marker definition serves the whole board:
+  rough, squiggly, and hand-drawn (unprofessional). One marker definition serves the whole diagram:
   ```svg
   <defs>
     <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4"
@@ -33,26 +32,26 @@ the real board (the image export and the GUI behave differently — see notes be
   <!-- double-headed (e.g. read/write): add marker-start too -->
   <line x1="100" y1="280" x2="360" y2="280" stroke="#0D4FA8" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
   ```
-  (The marker's own shape/colour is ignored on the board; it just signals "put a native arrowhead
+  (The marker's own shape/colour is ignored; it just signals "put a native arrowhead
   here." Keep the line straight or right-angled — those map to clean `straight` / `right_angled` connectors.)
   **The classic defect** is a `<line>` plus a separate little `<polyline>` / `<polygon>` chevron drawn
   at its tip — that chevron IS a hand-drawn arrowhead. Delete it and put `marker-end` on the line.
-  **Mandatory self-check before you write the board:** run
+  **Mandatory self-check before exporting:** run
   `grep -nE '<polygon|<polyline' <dir>/diagram.svg` — every `<polygon>`, and every short `<polyline>`
   shaped like a triangle/chevron at a line's endpoint, is a defect to convert. (A `<polyline>` is fine
   ONLY as a right-angled connector path that itself carries `marker-end` and has no separate chevron.)
   **This matters most when you START FROM or EDIT an existing SVG** (a gallery template, a previous
-  board, a translation): its arrows may predate this rule and still be hand-drawn — re-check and
+  diagram, a translation): its arrows may predate this rule and still be hand-drawn — re-check and
   convert them, don't just edit the text around them.
 - **Forbidden** (break or flatten to a static image): any gradient, `<filter>`, `<pattern>`,
   `<clipPath>`, `<mask>`, blur.
 - **Opacity is ignored.** `opacity` / `fill-opacity` / `stroke-opacity` all render fully opaque.
   To get a paler tint, use a **solid lighter hex** — never alpha. (To fake a translucent overlap,
   paint the overlap region as its own solid darker shape.)
-- **Text color is unrestricted on the live board** (any hex; the GUI's ~9 presets are not a limit) —
-  **but the image export renders text color unreliably (often black).** Judge text color via
-  `+query --output_as raw` (stored hex) or the live board, **never** the exported PNG. Light/cream
-  text works on saturated-dark fills when it's large and bold; small light text on near-black is unreliable.
+- **Text color is unrestricted** (any hex) — **but the image export renders text color unreliably
+  (often black).** Judge text color via the live preview or stored hex, **never** the exported PNG alone.
+  Light/cream text works on saturated-dark fills when it's large and bold; small light text on
+  near-black is unreliable.
 - **Shadows.** No blur/filter shadows (unsupported). Hard **offset shadows are allowed and fine** —
   draw one as a **solid duplicate of the SAME shape** offset behind the real one (never a blur). It must
   match the element's shape exactly: same `rx` (a pill's shadow is a pill, not a rect), same `width`/`height`,
@@ -61,9 +60,9 @@ the real board (the image export and the GUI behave differently — see notes be
 - **No decorative micro-chrome.** No ornamental kicker/footer/slug/metadata labels. Every text
   element must be load-bearing and legible (≥ ~16px, strong contrast); keep small text inside
   high-contrast panels, never small on a colored canvas.
-- **Never echo the user's instructions or your own process onto the board.** The board shows the
+- **Never echo the user's instructions or your own process onto the diagram.** The diagram shows the
   **content** — never the request that produced it, the inputs you read, or how you built it. A
-  whiteboard is a finished artifact, not a homework submission, so it carries no "here's what you
+  diagram is a finished artifact, not a homework submission, so it carries no "here's what you
   asked for" framing. Cut every meta / process line, for example:
   - scope or task notes — *"整理范围：仅总结张睿发言；问答部分按她的回答归纳"*, *"本图涵盖第 3-5 章"*
   - source citations — *"来源：会议逐字稿 00:06:28–00:52:58 的张睿发言"*, *"based on the attached doc"*
@@ -72,7 +71,7 @@ the real board (the image export and the GUI behave differently — see notes be
   - dates, tokens, file paths, or tooling you were not explicitly asked to display
 
   A **title may name the subject** (e.g. *"张睿 · 发言总结"* is fine — that is the topic), but nothing
-  on the board may describe the task, the source material, or the tool. **Litmus test:** if a line is
+  on the diagram may describe the task, the source material, or the tool. **Litmus test:** if a line is
   addressed to the person who asked (or to a grader) rather than being a real part of the artifact,
   delete it. Put that kind of context in your chat reply to the user, never on the canvas.
 - **Transforms:** `translate` / `rotate` / `scale` are safe; avoid `skewX` / `skewY` / `matrix(...)`.
@@ -102,20 +101,4 @@ the real board (the image export and the GUI behave differently — see notes be
        and especially when you started from an existing SVG whose arrows may predate the rule.
    - (`--check` flags `text-overflow`/`node-overlap`; intentional overlaps, off-canvas bleed, or a
      centered long Latin headline may report as warnings — judge with your eyes, not just the linter.)
-4. **Write it into Feishu as an editable whiteboard**, then **look at the real board too:**
-   `npx -y @larksuite/whiteboard-cli@^0.2.11 -i <dir>/diagram.svg --to openapi --format json | lark-cli whiteboard +update --whiteboard-token <tok> --source - --input_format raw --idempotent-token <unique> --overwrite --as user`
-   then `lark-cli whiteboard +query --whiteboard-token <tok> --output_as image --output <dir> --as user`,
-   view it, and fix any remaining layout issues. The export is faithful for **layout, shapes, fills,
-   opacity** — but **not text color** (verify color via `--output_as raw` or the live doc, not the PNG).
-
-### Creating the doc + whiteboard block to write into
-
-If the user didn't give a target whiteboard, create one:
-```bash
-# new doc with an empty whiteboard block; grab the block_token from the response
-lark-cli docs +create --api-version v2 \
-  --content '<title>My board</title><whiteboard type="blank"></whiteboard>' --as user
-```
-Then write the SVG to that `block_token` with the `whiteboard +update` command in step 4. To add a
-board to an existing doc the user gave, fetch it (`lark-cli docs +fetch`) or append a
-`<whiteboard type="blank"></whiteboard>` block, and use that block's token.
+4. **Deliver the image.** Give the user the rendered `diagram.png`.

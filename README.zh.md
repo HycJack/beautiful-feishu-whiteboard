@@ -1,14 +1,12 @@
-# Beautiful Feishu Whiteboard（飞书画板配色库）
+# Beautiful Whiteboard（SVG 图表配色库）
 
 [English README](./README.md)
 
-**一个包含 35 种精选配色风格的库，用来生成漂亮、可二次编辑的飞书 / Lark 画板。**
+**一个包含 35 种精选配色风格的库，用来生成漂亮的 SVG 图表并导出为图片。**
 
-查看[飞书文档版本的介绍](https://bytedance.us.larkoffice.com/docx/AldcdypvjoEqQDxcSVeu37ixs0d)（内含使用场景 showcase）
+这是一个给 AI agent 用的 **skill**（适用于 Claude Code 等会读取 `SKILL.md` 的 agent）。它不是一个自动排版的图表工具：**布局由你的 agent 自己来排**，而这些模板只提供有品味的**配色与气质**，外加 SVG 渲染的硬性规则。产出是一份干净的 SVG 图表，可以导出为 PNG 图片。
 
-这是一个给 AI agent 用的 **skill**（适用于 Claude Code 等会读取 `SKILL.md` 的 agent）。它不是一个自动排版的图表工具：**布局由你的 agent 自己来排**，而这些模板只提供有品味的**配色与气质**，外加飞书画板渲染引擎的硬性规则。产出是一块真正可在文档里继续编辑的飞书画板，而不是一张截图。
-
-> 这套规则来自对飞书 SVG 画板渲染引擎「能做什么、不能做什么」的实测沉淀（只支持原生图形、不支持透明度、文字颜色导出会失真等），全部写在 [`RULES.md`](RULES.md) 里。
+> 这套规则来自对 SVG 渲染限制的实测沉淀（只支持原生图形、不支持透明度、文字颜色导出会失真等），全部写在 [`RULES.md`](RULES.md) 里。
 
 ## 风格画廊（Gallery）
 
@@ -108,7 +106,7 @@
 
 **直接告诉你的 agent**（Claude Code 等）：
 
-> “帮我从 `github.com/zarazhangrui/beautiful-feishu-whiteboard` 安装 **beautiful-feishu-whiteboard** 这个 skill。”
+> "帮我从 `github.com/zarazhangrui/beautiful-feishu-whiteboard` 安装 **beautiful-whiteboard** 这个 skill。"
 
 或者自己运行安装器：
 
@@ -124,19 +122,12 @@ npx skills add zarazhangrui/beautiful-feishu-whiteboard -g
 
 ```bash
 git clone https://github.com/zarazhangrui/beautiful-feishu-whiteboard \
-  ~/.claude/skills/beautiful-feishu-whiteboard
+  ~/.claude/skills/beautiful-whiteboard
 ```
 
 ## 前置条件
 
 - **Node.js 20 或更高版本**
-- **一个飞书 / Lark 账号**。画板会写入你自己的租户。
-- **`lark-cli`**（npm 包 `@larksuite/cli`），已安装并完成授权：
-  ```bash
-  npm install -g @larksuite/cli
-  lark-cli config init     # 首次运行：扫码
-  lark-cli auth login      # 授权你的飞书/Lark 账号
-  ```
 - **`@larksuite/whiteboard-cli`**，通过 `npx` 调用，自动下载，无需单独安装。
 
 随时运行自检：`bash scripts/preflight.sh`
@@ -145,22 +136,22 @@ git clone https://github.com/zarazhangrui/beautiful-feishu-whiteboard \
 
 安装后，用大白话告诉你的 agent 就行。可以指定风格，也可以描述气质：
 
-> - “用 **Riso Brut** 风格做一块飞书画板，讲清楚我们的新人上手流程。”
-> - “把这篇文档变成一块飞书画板，**极简、cobalt 蓝** 的感觉。”
-> - “把系统架构画成飞书画板，**糖果色、活泼** 一点。”
-> - “用一块画板讲清楚 LLM 训练的三个阶段。”
+> - "用 **Riso Brut** 风格做一个图表，讲清楚我们的新人上手流程。"
+> - "把这篇文档变成一个**信息图**，**极简、cobalt 蓝** 的感觉。"
+> - "把系统架构画成图表，**糖果色、活泼** 一点。"
+> - "用图表讲清楚 LLM 训练的三个阶段。"
 
-你的 agent 会：先问清楚这块画板是干什么的、你想要什么气质，从[风格目录](CATALOG.md)里挑一个合适的风格，用原生图形把图画出来，渲染后自我检查（溢出、留白、重叠等问题），写入飞书文档成为可编辑画板，然后把**文档链接和图片一起**发给你。你随时可以换一个风格。
+你的 agent 会：先问清楚这个图表是干什么的、你想要什么气质，从[风格目录](CATALOG.md)里挑一个合适的风格，用原生图形把图画出来，渲染后自我检查（溢出、留白、重叠等问题），然后把**渲染好的图片**发给你。你随时可以换一个风格。
 
 ## 工作原理
 
-- **`SKILL.md`**：agent 的入口。包含使用时机、前置自检，以及对话流程（先搞清楚要画什么、再问气质、挑风格、生成、把链接和图片一起给用户、并告知可换风格）。
+- **`SKILL.md`**：agent 的入口。包含使用时机、前置自检，以及对话流程（先搞清楚要画什么、再问气质、挑风格、生成、把图片给用户、并告知可换风格）。
 - **`CATALOG.md`**：每个风格的气质、正式程度、适合的内容类型，便于 agent 按内容挑风格。
-- **`RULES.md`**：画板的硬性限制（只用原生图形、不用透明度、不用渐变和模糊、文字颜色导出失真的注意事项），以及 `lark-cli` / `whiteboard-cli` 的具体命令。
+- **`RULES.md`**：图表的硬性限制（只用原生图形、不用透明度、不用渐变和模糊、文字颜色导出失真的注意事项），以及具体的渲染命令。
 - **`templates/<slug>/design.md`**：每个风格一份，只有配色和用色说明。布局由 agent 自由发挥，模板只约束配色与气质。
 
 ## 许可
 
 [MIT](LICENSE) (c) Zara Zhang（[@zarazhangrui](https://github.com/zarazhangrui)）
 
-基于飞书/Lark 的 `@larksuite/cli` 与 `@larksuite/whiteboard-cli`。
+基于 `@larksuite/whiteboard-cli` 进行 SVG 渲染。
