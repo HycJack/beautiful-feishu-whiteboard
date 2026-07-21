@@ -101,4 +101,8 @@ and a mood**; this file is the **hard limits of the medium**.
        and especially when you started from an existing SVG whose arrows may predate the rule.
    - (`--check` flags `text-overflow`/`node-overlap`; intentional overlaps, off-canvas bleed, or a
      centered long Latin headline may report as warnings — judge with your eyes, not just the linter.)
+   - **Fix by editing the `.svg` in place with small targeted edits** (nudge a box, widen a panel,
+     rewrap a label) — never regenerate the whole SVG to fix a local issue, and apply every fix you
+     spotted in one view in a single edit pass before re-rendering. This keeps the iterate loop cheap
+     without losing any pass.
 4. **Deliver the image.** Give the user the rendered `diagram.png`.
